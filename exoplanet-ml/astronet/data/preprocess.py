@@ -220,16 +220,16 @@ def generate_example_for_tce(time, flux, tce):
   Args:
     time: 1D NumPy array; the time values of the light curve.
     flux: 1D NumPy array; the normalized flux values of the light curve.
-    tce: Dict-like object containing at least 'tce_period', 'tce_duration', and
-      'tce_time0bk'. Additional items are included as features in the output.
+    tce: Dict-like object containing at least 'koi_period', 'koi_duration', and
+      'koi_time0bk'. Additional items are included as features in the output.
 
   Returns:
     A tf.train.Example containing features 'global_view', 'local_view', and all
     values present in `tce`.
   """
-  period = tce["tce_period"]
-  duration = tce["tce_duration"]
-  t0 = tce["tce_time0bk"]
+  period = tce["koi_period"]
+  duration = tce["koi_duration"]
+  t0 = tce["koi_time0bk"]
 
   time, flux = phase_fold_and_sort_light_curve(time, flux, period, t0)
 
