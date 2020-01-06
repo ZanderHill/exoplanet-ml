@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-r"""Script to preprocesses data from the Kepler space telescope.
+"""Script to preprocesses data from the Kepler space telescope.
 
 This script produces training, validation and test sets of labeled Kepler
 Threshold Crossing Events (TCEs). A TCE is a detected periodic event on a
@@ -28,7 +28,6 @@ which can be downloaded in CSV format from the NASA Exoplanet Archive at:
   https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=q1_q17_dr24_tce
 
 The downloaded CSV file should contain at least the following column names:
-  rowid: Integer ID of the row in the TCE table.
   kepid: Kepler ID of the target star.
   tce_plnt_num: TCE number within the target star.
   tce_period: Orbital period of the detected event, in days.
@@ -66,7 +65,6 @@ following light curve representations:
 In addition, each Example contains the value of each column in the input TCE CSV
 file. Some of these features may be useful as auxiliary features to the model.
 The columns include:
-  rowid: Integer ID of the row in the TCE table.
   kepid: Kepler ID of the target star.
   tce_plnt_num: TCE number within the target star.
   av_training_set: Autovetter training set label.
@@ -90,16 +88,16 @@ from astronet.data import preprocess
 
 parser = argparse.ArgumentParser()
 
-_DR24_TCE_URL = ("https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/"
+_CUMULATIVE_KOI_URL = ("https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/"
                  "nph-tblView?app=ExoTbls&config=q1_q17_dr24_tce")
 
 parser.add_argument(
     "--input_tce_csv_file",
     type=str,
     required=True,
-    help="CSV file containing the Q1-Q17 DR24 Kepler TCE table. Must contain "
-    "columns: rowid, kepid, tce_plnt_num, tce_period, tce_duration, "
-    "tce_time0bk. Download from: {}".format(_DR24_TCE_URL))
+    help="CSV file containing the Cumulative KOI table. Must contain "
+    "columns: kepid, koi_tce_plnt_num, koi_period, koi_duration, "
+    "koi_time0bk. Download from: {}".format(_CUMULATIVE_KOI_URL))
 
 parser.add_argument(
     "--kepler_data_dir",
@@ -126,8 +124,8 @@ parser.add_argument(
     help="Number of subprocesses for processing the TCEs in parallel.")
 
 # Name and values of the column in the input CSV file to use as training labels.
-_LABEL_COLUMN = "av_training_set"
-_ALLOWED_LABELS = {"PC", "AFP", "NTP"}
+_LABEL_COLUMN = "koi_disposition"
+_ALLOWED_LABELS = {"CONFIRMED", "FALSE POSITIVE"}
 
 
 def _process_tce(tce):
@@ -182,7 +180,7 @@ def main(argv):
 
   # Read CSV file of Kepler KOIs.
   tce_table = pd.read_csv(
-      FLAGS.input_tce_csv_file, index_col="rowid", comment="#")
+      FLAGS.input_tce_csv_file, comment="#")
   tce_table["tce_duration"] /= 24  # Convert hours to days.
   tf.logging.info("Read TCE CSV file with %d rows.", len(tce_table))
 
