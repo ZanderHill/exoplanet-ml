@@ -324,7 +324,7 @@ class BuildDatasetTest(tf.test.TestCase):
 
   def testLabels1(self):
     self._input_config["label_feature"] = "label_str"
-    self._input_config["label_map"] = {"PC": 0, "AFP": 1, "NTP": 2}
+    self._input_config["label_map"] = {"CONFIRMED": 0, "FALSE POSITIVE": 1, "OOPS": 2}
 
     dataset = dataset_ops.build_dataset(
         file_pattern=self._file_pattern,
@@ -356,7 +356,7 @@ class BuildDatasetTest(tf.test.TestCase):
 
   def testLabels2(self):
     self._input_config["label_feature"] = "label_str"
-    self._input_config["label_map"] = {"PC": 1, "AFP": 0, "NTP": 0}
+    self._input_config["label_map"] = {"CONFIRMED": 1, "FALSE POSITIVE": 0, "OOPS": 0}
 
     dataset = dataset_ops.build_dataset(
         file_pattern=self._file_pattern,
@@ -390,7 +390,7 @@ class BuildDatasetTest(tf.test.TestCase):
     self._input_config["label_feature"] = "label_str"
 
     # Label ids should be contiguous integers starting at 0.
-    self._input_config["label_map"] = {"PC": 1, "AFP": 2, "NTP": 3}
+    self._input_config["label_map"] = {"CONFIRMED": 1, "FALSE POSITIVE": 2, "OOPS": 3}
 
     with self.assertRaises(ValueError):
       dataset_ops.build_dataset(
@@ -402,7 +402,7 @@ class BuildDatasetTest(tf.test.TestCase):
     self._input_config["label_feature"] = "label_str"
 
     # label_map does not include "NTP".
-    self._input_config["label_map"] = {"PC": 1, "AFP": 0}
+    self._input_config["label_map"] = {"CONFIRMED": 1, "FALSE POSITIVE": 0}
 
     dataset = dataset_ops.build_dataset(
         file_pattern=self._file_pattern,
@@ -431,7 +431,7 @@ class BuildDatasetTest(tf.test.TestCase):
     self._input_config["label_feature"] = "label_str"
 
     # "AFP" is -1, so these examples should be filtered.
-    self._input_config["label_map"] = {"PC": 1, "AFP": -1, "NTP": 0}
+    self._input_config["label_map"] = {"CONFIRMED": 1, "FALSE POSITIVE": -1, "OOPS": 0}
 
     dataset = dataset_ops.build_dataset(
         file_pattern=self._file_pattern,
