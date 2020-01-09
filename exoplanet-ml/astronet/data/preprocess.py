@@ -21,12 +21,13 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
-# from light_curve import binning
-# from light_curve import kepler_io
-# from light_curve import util
-import binning
-import kepler_io
-import util
+import sys
+
+sys.path.insert(0, '../../')
+
+from light_curve import binning
+from light_curve import kepler_io
+from light_curve import util
 
 from tf_util import example_util
 from third_party.kepler_spline import kepler_spline
